@@ -17,6 +17,8 @@ package com.liferay.consumer.manager.service.messaging;
 import com.liferay.consumer.manager.service.ClpSerializer;
 import com.liferay.consumer.manager.service.ConsumerExtensionInstanceLocalServiceUtil;
 import com.liferay.consumer.manager.service.ConsumerExtensionInstanceServiceUtil;
+import com.liferay.consumer.manager.service.ConsumerExtensionReportInstanceLocalServiceUtil;
+import com.liferay.consumer.manager.service.ConsumerExtensionReportInstanceServiceUtil;
 import com.liferay.consumer.manager.service.ConsumerLocalServiceUtil;
 import com.liferay.consumer.manager.service.ConsumerServiceUtil;
 
@@ -44,6 +46,9 @@ public class ClpMessageListener extends BaseMessageListener {
 			ConsumerExtensionInstanceLocalServiceUtil.clearService();
 
 			ConsumerExtensionInstanceServiceUtil.clearService();
+			ConsumerExtensionReportInstanceLocalServiceUtil.clearService();
+
+			ConsumerExtensionReportInstanceServiceUtil.clearService();
 		}
 	}
 }

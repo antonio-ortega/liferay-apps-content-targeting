@@ -16,6 +16,7 @@ package com.liferay.consumer.manager.service;
 
 import com.liferay.consumer.manager.model.ConsumerClp;
 import com.liferay.consumer.manager.model.ConsumerExtensionInstanceClp;
+import com.liferay.consumer.manager.model.ConsumerExtensionReportInstanceClp;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -112,6 +113,11 @@ public class ClpSerializer {
 			return translateInputConsumerExtensionInstance(oldModel);
 		}
 
+		if (oldModelClassName.equals(
+					ConsumerExtensionReportInstanceClp.class.getName())) {
+			return translateInputConsumerExtensionReportInstance(oldModel);
+		}
+
 		return oldModel;
 	}
 
@@ -142,6 +148,17 @@ public class ClpSerializer {
 		ConsumerExtensionInstanceClp oldClpModel = (ConsumerExtensionInstanceClp)oldModel;
 
 		BaseModel<?> newModel = oldClpModel.getConsumerExtensionInstanceRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
+	}
+
+	public static Object translateInputConsumerExtensionReportInstance(
+		BaseModel<?> oldModel) {
+		ConsumerExtensionReportInstanceClp oldClpModel = (ConsumerExtensionReportInstanceClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getConsumerExtensionReportInstanceRemoteModel();
 
 		newModel.setModelAttributes(oldClpModel.getModelAttributes());
 
@@ -205,6 +222,43 @@ public class ClpSerializer {
 		if (oldModelClassName.equals(
 					"com.liferay.consumer.manager.model.impl.ConsumerExtensionInstanceImpl")) {
 			return translateOutputConsumerExtensionInstance(oldModel);
+		}
+		else if (oldModelClassName.endsWith("Clp")) {
+			try {
+				ClassLoader classLoader = ClpSerializer.class.getClassLoader();
+
+				Method getClpSerializerClassMethod = oldModelClass.getMethod(
+						"getClpSerializerClass");
+
+				Class<?> oldClpSerializerClass = (Class<?>)getClpSerializerClassMethod.invoke(oldModel);
+
+				Class<?> newClpSerializerClass = classLoader.loadClass(oldClpSerializerClass.getName());
+
+				Method translateOutputMethod = newClpSerializerClass.getMethod("translateOutput",
+						BaseModel.class);
+
+				Class<?> oldModelModelClass = oldModel.getModelClass();
+
+				Method getRemoteModelMethod = oldModelClass.getMethod("get" +
+						oldModelModelClass.getSimpleName() + "RemoteModel");
+
+				Object oldRemoteModel = getRemoteModelMethod.invoke(oldModel);
+
+				BaseModel<?> newModel = (BaseModel<?>)translateOutputMethod.invoke(null,
+						oldRemoteModel);
+
+				return newModel;
+			}
+			catch (Throwable t) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Unable to translate " + oldModelClassName, t);
+				}
+			}
+		}
+
+		if (oldModelClassName.equals(
+					"com.liferay.consumer.manager.model.impl.ConsumerExtensionReportInstanceImpl")) {
+			return translateOutputConsumerExtensionReportInstance(oldModel);
 		}
 		else if (oldModelClassName.endsWith("Clp")) {
 			try {
@@ -330,6 +384,11 @@ public class ClpSerializer {
 		}
 
 		if (className.equals(
+					"com.liferay.consumer.manager.InvalidReportException")) {
+			return new com.liferay.consumer.manager.InvalidReportException();
+		}
+
+		if (className.equals(
 					"com.liferay.consumer.manager.NoSuchConsumerException")) {
 			return new com.liferay.consumer.manager.NoSuchConsumerException();
 		}
@@ -337,6 +396,11 @@ public class ClpSerializer {
 		if (className.equals(
 					"com.liferay.consumer.manager.NoSuchConsumerExtensionInstanceException")) {
 			return new com.liferay.consumer.manager.NoSuchConsumerExtensionInstanceException();
+		}
+
+		if (className.equals(
+					"com.liferay.consumer.manager.NoSuchConsumerExtensionReportInstanceException")) {
+			return new com.liferay.consumer.manager.NoSuchConsumerExtensionReportInstanceException();
 		}
 
 		return throwable;
@@ -359,6 +423,17 @@ public class ClpSerializer {
 		newModel.setModelAttributes(oldModel.getModelAttributes());
 
 		newModel.setConsumerExtensionInstanceRemoteModel(oldModel);
+
+		return newModel;
+	}
+
+	public static Object translateOutputConsumerExtensionReportInstance(
+		BaseModel<?> oldModel) {
+		ConsumerExtensionReportInstanceClp newModel = new ConsumerExtensionReportInstanceClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setConsumerExtensionReportInstanceRemoteModel(oldModel);
 
 		return newModel;
 	}

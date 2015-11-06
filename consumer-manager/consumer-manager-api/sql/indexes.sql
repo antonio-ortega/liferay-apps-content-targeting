@@ -11,3 +11,9 @@ create index IX_3372DD4 on CM_ConsumerExtensionInstance (consumerId);
 create index IX_58904DFE on CM_ConsumerExtensionInstance (consumerId, consumerExtensionKey);
 create index IX_3AC8F465 on CM_ConsumerExtensionInstance (uuid_);
 create index IX_F066CEA3 on CM_ConsumerExtensionInstance (uuid_, companyId);
+
+create index IX_FD179DF3 on CM_ConsumerExtensionReportInstance (companyId, consumerId, reportCategoryKey);
+create index IX_59454128 on CM_ConsumerExtensionReportInstance (consumerId);
+create index IX_D453FB53 on CM_ConsumerExtensionReportInstance (consumerId, reportKey);
+create index IX_3DA91C91 on CM_ConsumerExtensionReportInstance (uuid_);
+create index IX_75E612F7 on CM_ConsumerExtensionReportInstance (uuid_, companyId);
