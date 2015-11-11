@@ -14,6 +14,46 @@
  */
 -->
 
+<#macro closeConfirm
+	confirmMessage
+	controlCssClass
+>
+	<@aui["input"] type="hidden" name="closeConfirm" value="true" />
+
+	<@aui["script"] use="aui-base">
+		A.all('.${controlCssClass}').on(
+			'mouseup',
+			function(event) {
+				var closeConfirmElement = A.one('#<@portlet["namespace"] />closeConfirm');
+
+				closeConfirmElement.val('false');
+			}
+		);
+
+		A.on(
+			'beforeunload',
+			function(event) {
+				var closeConfirmElement = A.one('#<@portlet["namespace"] />closeConfirm');
+
+				if (closeConfirmElement.val() === 'true') {
+
+					if (event.stopPropagation) {
+
+						event.stopPropagation();
+					}
+
+					event.cancelBubble = true;
+					event.returnValue = '<@liferay_ui["message"] key="${confirmMessage}" />';
+
+					event.preventDefault('<@liferay_ui["message"] key="${confirmMessage}" />');
+
+					return '<@liferay_ui["message"] key="${confirmMessage}" />';
+				}
+			}
+		);
+	</@>
+</#macro>
+
 <#macro fieldHeaderListener
 	fieldName
 >

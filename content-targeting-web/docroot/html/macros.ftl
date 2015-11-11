@@ -18,6 +18,35 @@
 	<@liferay_ui["breadcrumb"] showCurrentGroup=false showCurrentPortlet=false showLayout=false />
 </#macro>
 
+<#macro closeConfirm
+	confirmMessage
+	controlCssClass
+>
+	<@aui["input"] type="hidden" name="closeConfirm" value="true" />
+
+	<@aui["script"] use="aui-base">
+		A.all('.${controlCssClass}, .tab').on(
+			'mouseup',
+			function(event) {
+				var closeConfirmElement = A.one('#<@portlet["namespace"] />closeConfirm');
+
+				closeConfirmElement.val('false');
+			}
+		);
+
+		A.on(
+			'beforeunload',
+			function(event) {
+				var closeConfirmElement = A.one('#<@portlet["namespace"] />closeConfirm');
+
+				if (closeConfirmElement.val() === 'true') {
+					event.preventDefault('<@liferay_ui["message"] key="${confirmMessage}" />');
+				}
+			}
+		);
+	</@>
+</#macro>
+
 <#macro fieldHeaderListener
 	fieldName
 >
